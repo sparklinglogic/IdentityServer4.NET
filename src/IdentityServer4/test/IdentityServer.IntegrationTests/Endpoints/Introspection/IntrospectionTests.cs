@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using IdentityModel.Client;
@@ -409,6 +410,14 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
 
             introspectionResponse.IsActive.Should().Be(false);
             introspectionResponse.IsError.Should().Be(false);
+        }
+    }
+
+    internal static class JsonElementExtensions
+    {
+        public static T ToObject<T>(this JsonElement element)
+        {
+            return JsonConvert.DeserializeObject<T>(element.ToString());
         }
     }
 }

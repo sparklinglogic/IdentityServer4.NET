@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace IdentityServer.IntegrationTests.Common
 {
@@ -320,6 +321,13 @@ namespace IdentityServer.IntegrationTests.Common
             string codeChallengeMethod = null,
             object extra = null)
         {
+            Parameters extraParams = null;
+            if (extra != null)
+            {
+                extraParams =
+                    new Parameters(
+                        JsonConvert.DeserializeObject<Dictionary<string, string>>(JsonConvert.SerializeObject(extra)));
+            }
             var url = new RequestUrl(AuthorizeEndpoint).CreateAuthorizeUrl(
                 clientId: clientId,
                 responseType: responseType,
@@ -332,7 +340,7 @@ namespace IdentityServer.IntegrationTests.Common
                 responseMode: responseMode,
                 codeChallenge: codeChallenge,
                 codeChallengeMethod: codeChallengeMethod,
-                extra: extra);
+                extra: extraParams);
             return url;
         }
 
