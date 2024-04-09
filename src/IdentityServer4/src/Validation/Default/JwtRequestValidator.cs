@@ -15,8 +15,6 @@ using IdentityServer4.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace IdentityServer4.Validation
 {
