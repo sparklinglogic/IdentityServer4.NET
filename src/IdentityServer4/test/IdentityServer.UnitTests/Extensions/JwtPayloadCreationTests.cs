@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -40,7 +40,7 @@ namespace IdentityServer.UnitTests.Extensions
         public void Should_create_scopes_as_array_by_default()
         {
             var options = new IdentityServerOptions();
-            var payload = _token.CreateJwtPayload(new SystemClock(), options, TestLogger.Create<JwtPayloadCreationTests>());
+            var payload = _token.CreateJwtPayload(TimeProvider.System, options, TestLogger.Create<JwtPayloadCreationTests>());
 
             payload.Should().NotBeNull();
             var scopes = payload.Claims.Where(c => c.Type == JwtClaimTypes.Scope).ToArray();
@@ -58,7 +58,7 @@ namespace IdentityServer.UnitTests.Extensions
                 EmitScopesAsSpaceDelimitedStringInJwt = true
             };
             
-            var payload = _token.CreateJwtPayload(new SystemClock(), options, TestLogger.Create<JwtPayloadCreationTests>());
+            var payload = _token.CreateJwtPayload(TimeProvider.System, options, TestLogger.Create<JwtPayloadCreationTests>());
 
             payload.Should().NotBeNull();
             var scopes = payload.Claims.Where(c => c.Type == JwtClaimTypes.Scope).ToList();
