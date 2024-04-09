@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -19,13 +19,13 @@ namespace IdentityServer.UnitTests.Validation.AuthorizeRequest_Validation
 
         [Fact]
         [Trait("Category", Category)]
-        public void Null_Parameter()
+        public async Task Null_Parameter()
         {
             var validator = Factory.CreateAuthorizeRequestValidator();
 
             Func<Task> act = () => validator.ValidateAsync(null);
 
-            act.Should().Throw<ArgumentNullException>();
+            await act.Should().ThrowAsync<ArgumentNullException>();
         }
 
         [Fact]

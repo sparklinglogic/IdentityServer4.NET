@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Options;
 using IdentityServer4.EntityFramework.Stores;
@@ -83,7 +83,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 foundDeviceFlowCodes.Should().NotBeNull();
                 var deserializedData = new PersistentGrantSerializer().Deserialize<DeviceCode>(foundDeviceFlowCodes?.Data);
 
-                deserializedData.CreationTime.Should().BeCloseTo(data.CreationTime);
+                deserializedData.CreationTime.Should().BeCloseTo(data.CreationTime, TimeSpan.Zero);
                 deserializedData.ClientId.Should().Be(data.ClientId);
                 deserializedData.Lifetime.Should().Be(data.Lifetime);
             }

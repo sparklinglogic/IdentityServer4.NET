@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -146,9 +146,11 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
                 const int timeout = 5000;
                 var task = Task.Run(() => store.FindClientByIdAsync(testClient.ClientId));
 
-                if (await Task.WhenAny(task, Task.Delay(timeout)) == task)
+                var result = await Task.WhenAny(task, Task.Delay(timeout));
+
+                if (result == task)
                 {
-                    var client = task.Result;
+                    var client = await task;
                     client.Should().BeEquivalentTo(testClient);
                 }
                 else
