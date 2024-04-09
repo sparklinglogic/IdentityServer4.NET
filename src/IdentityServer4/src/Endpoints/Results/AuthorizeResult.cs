@@ -132,7 +132,7 @@ namespace IdentityServer4.Endpoints.Results
             var referrer_policy = "no-referrer";
             if (!context.Response.Headers.ContainsKey("Referrer-Policy"))
             {
-                context.Response.Headers.Add("Referrer-Policy", referrer_policy);
+                context.Response.Headers.Append("Referrer-Policy", referrer_policy);
             }
         }
 
