@@ -34,7 +34,7 @@ jobs:
       #run: ./build.ps1
       run: |
         ./build.ps1
-        dotnet nuget push .\nuget\*.nupkg --source "github" --api-key ${{ secrets.GITHUB_TOKEN }}
+        dotnet nuget push .\nuget\*.nupkg --source "https://github.com/sparklinglogic/IdentityServer4.NET" --api-key ${{ secrets.GITHUB_TOKEN }}
     - if: (matrix.runs-on == 'windows-latest') && (github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags/'))
       run: |
         ./build.ps1
