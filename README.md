@@ -1,7 +1,14 @@
 # Important update
-This project is not maintained anymore. This repo will be archived when .NET Core 3.1 end of support is reached (13th Dec 2022). All new development is happening in the new [Duende Software](https://github.com/duendesoftware) organization. 
+The [original project](https://github.com/IdentityServer/IdentityServer4) is not maintained anymore. The repo has been archived when .NET Core 3.1 end of support was reached (13th Dec 2022). All new development is happening in the new [Duende Software](https://github.com/duendesoftware) organization. 
 
 See [here](https://duendesoftware.com/products/identityserver) for more details.
+
+This fork is mainly to support new .NET platforms. Starting with `.NET 8` and planning to support `LTS` versions of .NET. 
+
+Continued maintenance for:
+- .NET `LTS` versions
+- Update to latest 3<sup>rd</sup> dependencies
+- Fix critical security vulnerabilities
 
 ## About IdentityServer4
 [<img align="right" width="100px" src="https://dotnetfoundation.org/img/logo_big.svg" />](https://dotnetfoundation.org/projects?searchquery=IdentityServer&type=project)

@@ -7,7 +7,7 @@ on:
     - features/**
     tags:
     - '*.*.*'
-  #pull_request:
+  pull_request:
 
 env:
   DOTNET_NOLOGO: true
@@ -31,10 +31,7 @@ jobs:
     - if: contains(matrix.runs-on, 'macOS') || contains(matrix.runs-on, 'ubuntu')
       run: ./build.sh
     - if: matrix.runs-on == 'windows-latest' && github.ref != 'refs/heads/main' && !contains(github.ref, 'refs/tags/')
-      #run: ./build.ps1
-      run: |
-        ./build.ps1
-        dotnet nuget push .\nuget\*.nupkg --source "github" --api-key ${{ secrets.GITHUB_TOKEN }}
+      run: ./build.ps1
     - if: (matrix.runs-on == 'windows-latest') && (github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags/'))
       run: |
         ./build.ps1
