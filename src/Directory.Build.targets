@@ -6,6 +6,8 @@
     <EntityFrameworkVersion>8.0.4</EntityFrameworkVersion>
     
     <IdentityServerVersion>4.8.0-*</IdentityServerVersion>
+
+    <MinVerTagPrefix>v</MinVerTagPrefix>
   </PropertyGroup>
 
   <ItemGroup>
