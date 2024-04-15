@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -29,7 +29,7 @@ namespace IdentityServer4.Services
         /// <summary>
         ///  The clock
         /// </summary>
-        protected readonly ISystemClock Clock;
+        protected readonly TimeProvider Clock;
 
         /// <summary>
         /// The logger
@@ -43,7 +43,7 @@ namespace IdentityServer4.Services
         /// <param name="userConsentStore">The user consent store.</param>
         /// <param name="logger">The logger.</param>
         /// <exception cref="System.ArgumentNullException">store</exception>
-        public DefaultConsentService(ISystemClock clock, IUserConsentStore userConsentStore, ILogger<DefaultConsentService> logger)
+        public DefaultConsentService(TimeProvider clock, IUserConsentStore userConsentStore, ILogger<DefaultConsentService> logger)
         {
             Clock = clock;
             UserConsentStore = userConsentStore;
@@ -111,7 +111,7 @@ namespace IdentityServer4.Services
                 return true;
             }
 
-            if (consent.Expiration.HasExpired(Clock.UtcNow.UtcDateTime))
+            if (consent.Expiration.HasExpired(Clock.GetUtcNow().UtcDateTime))
             {
                 Logger.LogDebug("Consent found in consent store is expired, consent is required");
                 await UserConsentStore.RemoveUserConsentAsync(consent.SubjectId, consent.ClientId);
@@ -169,7 +169,7 @@ namespace IdentityServer4.Services
 
                     var consent = new Consent
                     {
-                        CreationTime = Clock.UtcNow.UtcDateTime,
+                        CreationTime = Clock.GetUtcNow().UtcDateTime,
                         SubjectId = subjectId,
                         ClientId = clientId,
                         Scopes = scopes

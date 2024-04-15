@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -25,18 +25,18 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
         [Fact]
         [Trait("Category", Category)]
-        public void Parameters_Null()
+        public async Task Parameters_Null()
         {
             var validator = Factory.CreateTokenRequestValidator();
 
             Func<Task> act = () => validator.ValidateRequestAsync(null, null);
 
-            act.Should().Throw<ArgumentNullException>();
+            await act.Should().ThrowAsync<ArgumentNullException>();
         }
 
         [Fact]
         [Trait("Category", Category)]
-        public void Client_Null()
+        public async Task Client_Null()
         {
             var validator = Factory.CreateTokenRequestValidator();
 
@@ -47,7 +47,7 @@ namespace IdentityServer.UnitTests.Validation.TokenRequest_Validation
 
             Func<Task> act = () => validator.ValidateRequestAsync(parameters, null);
 
-            act.Should().Throw<ArgumentNullException>();
+            await act.Should().ThrowAsync<ArgumentNullException>();
         }
 
         [Fact]

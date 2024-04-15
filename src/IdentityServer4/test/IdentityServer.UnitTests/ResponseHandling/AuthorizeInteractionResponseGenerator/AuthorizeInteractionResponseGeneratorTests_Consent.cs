@@ -107,12 +107,11 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
 
         [Fact]
-        public void ProcessConsentAsync_NullRequest_Throws()
+        public async Task ProcessConsentAsync_NullRequest_Throws()
         {
             Func<Task> act = () => _subject.ProcessConsentAsync(null, new ConsentResponse());
 
-            act.Should().Throw<ArgumentNullException>()
-                .And.ParamName.Should().Be("request");
+            await act.Should().ThrowAsync<ArgumentNullException>().WithParameterName("request");
         }
         
         [Fact]
@@ -131,7 +130,7 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
         }
 
         [Fact]
-        public void ProcessConsentAsync_PromptModeIsLogin_Throws()
+        public async Task ProcessConsentAsync_PromptModeIsLogin_Throws()
         {
             RequiresConsent(true);
             var request = new ValidatedAuthorizeRequest()
@@ -146,12 +145,11 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             Func<Task> act = () => _subject.ProcessConsentAsync(request);
 
-            act.Should().Throw<ArgumentException>()
-                .And.Message.Should().Contain("PromptMode");
+            await act.Should().ThrowAsync<ArgumentException>().WithMessage("*PromptMode");
         }
 
         [Fact]
-        public void ProcessConsentAsync_PromptModeIsSelectAccount_Throws()
+        public async Task ProcessConsentAsync_PromptModeIsSelectAccount_Throws()
         {
             RequiresConsent(true);
             var request = new ValidatedAuthorizeRequest()
@@ -166,8 +164,8 @@ namespace IdentityServer.UnitTests.ResponseHandling.AuthorizeInteractionResponse
 
             Func<Task> act = () => _subject.ProcessConsentAsync(request);
 
-            act.Should().Throw<ArgumentException>()
-                .And.Message.Should().Contain("PromptMode");
+            await act.Should().ThrowAsync<ArgumentException>()
+                .WithMessage("*PromptMode*");
         }
 
 
