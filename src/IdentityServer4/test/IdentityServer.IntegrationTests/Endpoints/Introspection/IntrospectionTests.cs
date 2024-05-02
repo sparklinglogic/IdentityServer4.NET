@@ -415,9 +415,9 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
 
     internal static class JsonElementExtensions
     {
-        public static T ToObject<T>(this JsonElement element)
+        public static T ToObject<T>(this JsonElement? element)
         {
-            return JsonConvert.DeserializeObject<T>(element.ToString());
+            return element == null ? default(T) : JsonConvert.DeserializeObject<T>(element.ToString());
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -12,6 +12,7 @@ using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
 using Xunit;
+using Xunit.Sdk;
 
 namespace IdentityServer.IntegrationTests.Conformance.Basic
 {
@@ -99,10 +100,20 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
 
             var state = Guid.NewGuid().ToString();
             var nonce = Guid.NewGuid().ToString();
+            
+            var t = () =>
+                _mockPipeline.CreateAuthorizeUrl(
+                    clientId: "code_client",
+                    responseType: null, // missing
+                    scope: "openid",
+                    redirectUri: "https://code_client/callback",
+                    state: state,
+                    nonce: nonce);
+            t.Should().Throw<ArgumentException>().WithParameterName("response_type");
 
             var url = _mockPipeline.CreateAuthorizeUrl(
                 clientId: "code_client",
-                responseType: null, // missing
+                responseType: "invalid", // missing
                 scope: "openid",
                 redirectUri: "https://code_client/callback",
                 state: state,
