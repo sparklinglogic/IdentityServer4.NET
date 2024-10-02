@@ -1,8 +1,8 @@
 <Project>
 
   <PropertyGroup>
-    <FrameworkVersion>8.0.6</FrameworkVersion>
-    <ExtensionsVersion>8.0.6</ExtensionsVersion>
+    <FrameworkVersion>8.0.8</FrameworkVersion>
+    <ExtensionsVersion>8.0.8</ExtensionsVersion>
     <EntityFrameworkVersion>8.0.6</EntityFrameworkVersion>
     
     <IdentityServerVersion>4.8.0-*</IdentityServerVersion>
@@ -12,16 +12,16 @@
 
   <ItemGroup>
     <!--build related-->
-    <PackageReference Include="MinVer" Version="5.0.0" PrivateAssets="All" />
+    <PackageReference Include="MinVer" Version="6.0.0" PrivateAssets="All" />
     <PackageReference Update="SimpleExec" Version="12.0.0" />
     <PackageReference Update="Bullseye" Version="5.0.0" />
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 
     <!--tests -->
-    <PackageReference Update="FluentAssertions" Version="6.12.0" />
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.10.0" />
-    <PackageReference Update="xunit" Version="2.7.0" />
-    <PackageReference Update="xunit.runner.visualstudio" Version="2.5.7" PrivateAssets="All" />
+    <PackageReference Update="FluentAssertions" Version="6.12.1" />
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Update="xunit" Version="2.9.2" />
+    <PackageReference Update="xunit.runner.visualstudio" Version="2.8.2" PrivateAssets="All" />
 
     <!--our stuff -->
     <PackageReference Update="IdentityModel" Version="7.0.0" />
@@ -35,8 +35,8 @@
     <PackageReference Update="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(ExtensionsVersion)" />
     
     <!--misc -->
-    <PackageReference Update="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.6.0" />
-    <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="7.6.0" />
+    <PackageReference Update="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.1.0" />
+    <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="8.1.0" />
     <PackageReference Update="System.Security.Principal.Windows" Version="5.0.0" />
     <PackageReference Update="AutoMapper" Version="13.0.1" />
     
