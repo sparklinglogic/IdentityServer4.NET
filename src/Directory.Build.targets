@@ -1,9 +1,9 @@
 <Project>
 
   <PropertyGroup>
-    <FrameworkVersion>8.0.8</FrameworkVersion>
-    <ExtensionsVersion>8.0.8</ExtensionsVersion>
-    <EntityFrameworkVersion>8.0.6</EntityFrameworkVersion>
+    <FrameworkVersion>8.0.10</FrameworkVersion>
+    <ExtensionsVersion>8.0.10</ExtensionsVersion>
+    <EntityFrameworkVersion>8.0.10</EntityFrameworkVersion>
     
     <IdentityServerVersion>4.8.0-*</IdentityServerVersion>
 
@@ -35,8 +35,8 @@
     <PackageReference Update="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(ExtensionsVersion)" />
     
     <!--misc -->
-    <PackageReference Update="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.1.0" />
-    <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="8.1.0" />
+    <PackageReference Update="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.1.2" />
+    <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="8.1.2" />
     <PackageReference Update="System.Security.Principal.Windows" Version="5.0.0" />
     <PackageReference Update="AutoMapper" Version="13.0.1" />
     
