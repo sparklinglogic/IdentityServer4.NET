@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>IdentityServer4.NET.AspNetIdentity</PackageId>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFrameworks>net10.0</TargetFrameworks>
     
     <Description>ASP.NET Core Identity Integration for IdentityServer4</Description>
     <Authors>Sparkling Logic</Authors>

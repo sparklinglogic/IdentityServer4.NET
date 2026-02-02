@@ -22,7 +22,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.TokenCleanup
 
         public TokenCleanupTests(DatabaseProviderFixture<PersistedGrantDbContext> fixture) : base(fixture)
         {
-            foreach (var options in ((TheoryData)TestDatabaseProviders).SelectMany(x => x.Select(y => (DbContextOptions<PersistedGrantDbContext>)y)).ToList())
+            foreach (var options in TestDatabaseProviders.Select(x => x.Data).ToList())
             {
                 using (var context = new PersistedGrantDbContext(options, StoreOptions))
                 {
