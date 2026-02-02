@@ -1,10 +1,10 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -102,7 +102,7 @@ namespace IdentityServer4.Extensions
         {
             if (value.IsPresent())
             {
-                var bytes = Base64Url.Decode(value);
+                var bytes = Base64Url.DecodeFromChars(value);
                 value = Encoding.UTF8.GetString(bytes);
                 return ObjectSerializer.FromString<string[]>(value);
             }
@@ -116,7 +116,7 @@ namespace IdentityServer4.Extensions
             {
                 var value = ObjectSerializer.ToString(list);
                 var bytes = Encoding.UTF8.GetBytes(value);
-                value = Base64Url.Encode(bytes);
+                value = Base64Url.EncodeToString(bytes);
                 return value;
             }
 

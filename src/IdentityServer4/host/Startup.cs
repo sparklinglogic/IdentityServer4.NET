@@ -4,7 +4,7 @@
 
 using System;
 using IdentityServerHost.Configuration;
-using IdentityModel;
+using Duende.IdentityModel;
 using IdentityServer4;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;

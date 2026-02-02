@@ -24,7 +24,7 @@
     <PackageReference Update="xunit.runner.visualstudio" Version="3.1.5" PrivateAssets="All" />
 
     <!--our stuff -->
-    <PackageReference Update="IdentityModel" Version="7.0.0" />
+    <PackageReference Update="Duende.IdentityModel" Version="8.0.0" />
 
     <!--microsoft extensions -->
     <PackageReference Update="Microsoft.Extensions.Caching.Memory" Version="$(ExtensionsVersion)" />

@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using FluentAssertions;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
@@ -175,7 +175,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Revocation
                 ClientSecret = scope_secret,
 
                 Token = token,
-                TokenTypeHint = IdentityModel.OidcConstants.TokenTypes.AccessToken
+                TokenTypeHint = Duende.IdentityModel.OidcConstants.TokenTypes.AccessToken
             });
 
             return response.IsError == false && response.IsActive;

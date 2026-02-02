@@ -11,7 +11,7 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 using IdentityServer4;
 using IdentityServer4.Configuration;
 using IdentityServer4.Extensions;

@@ -42,7 +42,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Storage\src\IdentityServer4.Storage.csproj" />
 	
-    <PackageReference Include="IdentityModel" />
+    <PackageReference Include="Duende.IdentityModel" />
 
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" />
 

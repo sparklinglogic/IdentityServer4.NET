@@ -3,7 +3,7 @@
 
 
 using System.Collections.Generic;
-using IdentityModel;
+using Duende.IdentityModel;
 
 namespace IdentityServer4.Configuration
 {
