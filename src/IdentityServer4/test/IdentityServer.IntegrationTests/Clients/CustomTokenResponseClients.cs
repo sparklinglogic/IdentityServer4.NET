@@ -14,23 +14,41 @@ using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Clients.Setup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace IdentityServer.IntegrationTests.Clients
 {
-    public class CustomTokenResponseClients
+    public class CustomTokenResponseClients: IAsyncLifetime
     {
         private const string TokenEndpoint = "https://server/connect/token";
 
-        private readonly HttpClient _client;
+        private HttpClient _client;
+        private IHost _host;
 
-        public CustomTokenResponseClients()
+        public async ValueTask DisposeAsync()
         {
-            var builder = new WebHostBuilder()
-                .UseStartup<StartupWithCustomTokenResponses>();
-            var server = new TestServer(builder);
+            await _host.StopAsync();
+            _host.Dispose();
+        }
+
+        public async ValueTask InitializeAsync()
+        {
+            _host = new HostBuilder()
+                .ConfigureWebHost(webHostBuilder =>
+                {
+                    webHostBuilder
+                        .UseTestServer() // If using TestServer
+                        //.UseContentRoot(Directory.GetCurrentDirectory())
+                        .UseStartup<StartupWithCustomTokenResponses>();
+                    //.UseKestrel();
+                })
+                .Build();
+            await _host.StartAsync();
+
+            var server = _host.GetTestServer();
 
             _client = server.CreateClient();
         }

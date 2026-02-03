@@ -3,7 +3,6 @@
 
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -11,25 +10,42 @@ using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Clients.Setup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Xunit;
 
 namespace IdentityServer.IntegrationTests.Clients
 {
-    public class CustomTokenRequestValidatorClient
+    public class CustomTokenRequestValidatorClient: IAsyncLifetime
     {
         private const string TokenEndpoint = "https://server/connect/token";
 
-        private readonly HttpClient _client;
+        private HttpClient _client;
+        private IHost _host;
 
-        public CustomTokenRequestValidatorClient()
+        public async ValueTask DisposeAsync()
+        {
+            await _host.StopAsync();
+            _host.Dispose();
+        }
+
+        public async ValueTask InitializeAsync()
         {
             var val = new TestCustomTokenRequestValidator();
             Startup.CustomTokenRequestValidator = val;
+            _host = new HostBuilder()
+                .ConfigureWebHost(webHostBuilder =>
+                {
+                    webHostBuilder
+                        .UseTestServer() // If using TestServer
+                        //.UseContentRoot(Directory.GetCurrentDirectory())
+                        .UseStartup<Startup>();
+                    //.UseKestrel();
+                })
+                .Build();
+            await _host.StartAsync();
 
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
-            var server = new TestServer(builder);
+            var server = _host.GetTestServer();
 
             _client = server.CreateClient();
         }

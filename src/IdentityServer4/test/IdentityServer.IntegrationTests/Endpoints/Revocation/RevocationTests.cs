@@ -16,7 +16,7 @@ using Xunit;
 
 namespace IdentityServer.IntegrationTests.Endpoints.Revocation
 {
-    public class RevocationTests
+    public class RevocationTests: IAsyncLifetime
     {
         private const string Category = "RevocationTests endpoint";
 
@@ -29,7 +29,12 @@ namespace IdentityServer.IntegrationTests.Endpoints.Revocation
 
         private IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
 
-        public RevocationTests()
+        public async ValueTask DisposeAsync()
+        {
+            await _mockPipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
         {
             _mockPipeline.Clients.Add(new Client
             {
@@ -100,7 +105,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Revocation
                 }
             });
 
-            _mockPipeline.Initialize();
+            await _mockPipeline.InitializeAsync();
         }
 
         private class Tokens

@@ -24,14 +24,19 @@ using static IdentityServer4.IdentityServerConstants;
 
 namespace IdentityServer.IntegrationTests.Endpoints.EndSession
 {
-    public class EndSessionTests
+    public class EndSessionTests: IAsyncLifetime
     {
         private const string Category = "End session endpoint";
 
         private IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
         private Client _wsfedClient;
 
-        public EndSessionTests()
+        public async ValueTask DisposeAsync()
+        {
+            await _mockPipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
         {
             _mockPipeline.Clients.Add(new Client
             {
@@ -98,7 +103,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.EndSession
                 new IdentityResources.OpenId()
             });
 
-            _mockPipeline.Initialize();
+            await _mockPipeline.InitializeAsync();
         }
 
         [Fact]

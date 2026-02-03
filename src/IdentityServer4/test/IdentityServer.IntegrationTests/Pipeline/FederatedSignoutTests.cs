@@ -19,14 +19,19 @@ using Xunit;
 
 namespace IdentityServer.IntegrationTests.Pipeline
 {
-    public class FederatedSignoutTests
+    public class FederatedSignoutTests: IAsyncLifetime
     {
         private const string Category = "Federated Signout";
 
         private IdentityServerPipeline _pipeline = new IdentityServerPipeline();
         private ClaimsPrincipal _user;
 
-        public FederatedSignoutTests()
+        public async ValueTask DisposeAsync()
+        {
+            await _pipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
         {
             _user = new IdentityServerUser("bob")
             {
@@ -63,7 +68,7 @@ namespace IdentityServer.IntegrationTests.Pipeline
                }
             });
 
-            _pipeline.Initialize();
+            await _pipeline.InitializeAsync();
         }
 
         [Fact]

@@ -15,7 +15,7 @@ using Xunit;
 
 namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 {
-    public class RestrictAccessTokenViaBrowserTests
+    public class RestrictAccessTokenViaBrowserTests: IAsyncLifetime
     {
         private const string Category = "RestrictAccessTokenViaBrowserTests";
 
@@ -23,7 +23,12 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 
         private ClaimsPrincipal _user = new IdentityServerUser("bob").CreatePrincipal();
 
-        public RestrictAccessTokenViaBrowserTests()
+        public async ValueTask DisposeAsync()
+        {
+            await _mockPipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
         {
             _mockPipeline.Clients.AddRange(new Client[] {
                 new Client
@@ -84,7 +89,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 new IdentityResources.OpenId()
             });
 
-            _mockPipeline.Initialize();
+            await _mockPipeline.InitializeAsync();
         }
 
         [Fact]

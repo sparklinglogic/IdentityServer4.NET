@@ -14,7 +14,7 @@ using Xunit;
 
 namespace IdentityServer.IntegrationTests.Pipeline
 {
-    public class SubpathHosting
+    public class SubpathHosting: IAsyncLifetime
     {
         private const string Category = "Subpath endpoint";
 
@@ -22,7 +22,12 @@ namespace IdentityServer.IntegrationTests.Pipeline
 
         private Client _client1;
 
-        public SubpathHosting()
+        public async ValueTask DisposeAsync()
+        {
+            await _mockPipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
         {
             _mockPipeline.Clients.AddRange(new Client[] {
                 _client1 = new Client
@@ -54,7 +59,7 @@ namespace IdentityServer.IntegrationTests.Pipeline
                 new IdentityResources.Email()
             });
             
-            _mockPipeline.Initialize("/subpath");
+            await _mockPipeline.InitializeAsync("/subpath");
         }
 
         [Fact]

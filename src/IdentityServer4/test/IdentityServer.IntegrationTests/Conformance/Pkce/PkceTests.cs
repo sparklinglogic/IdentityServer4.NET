@@ -19,7 +19,7 @@ using Xunit;
 
 namespace IdentityServer.IntegrationTests.Conformance.Pkce
 {
-    public class PkceTests
+    public class PkceTests: IAsyncLifetime
     {
         private const string Category = "PKCE";
 
@@ -39,7 +39,12 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
         private string client_secret = "secret";
         private string response_type = "code";
 
-        public PkceTests()
+        public async ValueTask DisposeAsync()
+        {
+            await _pipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
         {
             _pipeline.Users.Add(new TestUser
             {
@@ -159,7 +164,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Pkce
                 }
             });
 
-            _pipeline.Initialize();
+            await _pipeline.InitializeAsync();
         }
 
         [Theory]

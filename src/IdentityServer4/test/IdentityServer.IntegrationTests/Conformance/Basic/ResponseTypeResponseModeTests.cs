@@ -16,15 +16,19 @@ using Xunit.Sdk;
 
 namespace IdentityServer.IntegrationTests.Conformance.Basic
 {
-    public class ResponseTypeResponseModeTests
+    public class ResponseTypeResponseModeTests: IAsyncLifetime
     {
         private const string Category = "Conformance.Basic.ResponseTypeResponseModeTests";
 
         private IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
-
-        public ResponseTypeResponseModeTests()
+        public async ValueTask DisposeAsync()
         {
-            _mockPipeline.Initialize();
+            await _mockPipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
+        {
+            await _mockPipeline.InitializeAsync();
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
             _mockPipeline.Clients.Add(new Client
             {

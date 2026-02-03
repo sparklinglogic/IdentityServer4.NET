@@ -10,21 +10,39 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using IdentityServer.IntegrationTests.Clients.Setup;
+using Microsoft.Extensions.Hosting;
 using Xunit;
 
 namespace IdentityServer.IntegrationTests.Clients
 {
-    public class DiscoveryClientTests
+    public class DiscoveryClientTests: IAsyncLifetime
     {
         private const string DiscoveryEndpoint = "https://server/.well-known/openid-configuration";
 
-        private readonly HttpClient _client;
+        private HttpClient _client;
+        private IHost _host;
 
-        public DiscoveryClientTests()
+        public async ValueTask DisposeAsync()
         {
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
-            var server = new TestServer(builder);
+            await _host.StopAsync();
+            _host.Dispose();
+        }
+
+        public async ValueTask InitializeAsync()
+        {
+            _host = new HostBuilder()
+                .ConfigureWebHost(webHostBuilder =>
+                {
+                    webHostBuilder
+                        .UseTestServer() // If using TestServer
+                        //.UseContentRoot(Directory.GetCurrentDirectory())
+                        .UseStartup<Startup>();
+                    //.UseKestrel();
+                })
+                .Build();
+            await _host.StartAsync();
+
+            var server = _host.GetTestServer();
 
             _client = server.CreateClient();
         }

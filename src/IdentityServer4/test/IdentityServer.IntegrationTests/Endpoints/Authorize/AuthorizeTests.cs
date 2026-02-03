@@ -21,7 +21,7 @@ using Xunit;
 
 namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 {
-    public class AuthorizeTests
+    public class AuthorizeTests: IAsyncLifetime
     {
         private const string Category = "Authorize endpoint";
 
@@ -29,7 +29,12 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 
         private Client _client1;
 
-        public AuthorizeTests()
+        public async ValueTask DisposeAsync()
+        {
+            await _mockPipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
         {
             _mockPipeline.Clients.AddRange(new Client[] {
                 _client1 = new Client
@@ -112,7 +117,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 }
             });
 
-            _mockPipeline.Initialize();
+            await _mockPipeline.InitializeAsync();
         }
 
         [Fact]
@@ -182,7 +187,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     services.AddTransient(typeof(IAuthorizationParametersMessageStore), storeType);
                 };
-                _mockPipeline.Initialize();
+                await _mockPipeline.InitializeAsync();
             }
 
             var url = _mockPipeline.CreateAuthorizeUrl(
@@ -278,7 +283,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     services.AddTransient(typeof(IAuthorizationParametersMessageStore), storeType);
                 };
-                _mockPipeline.Initialize();
+                await _mockPipeline.InitializeAsync();
             }
 
             _mockPipeline.Subject = new IdentityServerUser("bob").CreatePrincipal();

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -15,15 +15,19 @@ using Xunit;
 
 namespace IdentityServer.IntegrationTests.Conformance.Basic
 {
-    public class RedirectUriTests
+    public class RedirectUriTests: IAsyncLifetime
     {
         private const string Category = "Conformance.Basic.RedirectUriTests";
 
         private IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
-
-        public RedirectUriTests()
+        public async ValueTask DisposeAsync()
         {
-            _mockPipeline.Initialize();
+            await _mockPipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
+        {
+            await _mockPipeline.InitializeAsync();
 
             _mockPipeline.Clients.Add(new Client
             {

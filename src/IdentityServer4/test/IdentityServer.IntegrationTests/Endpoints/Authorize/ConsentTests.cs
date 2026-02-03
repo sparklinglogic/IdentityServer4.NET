@@ -18,13 +18,18 @@ using Xunit;
 
 namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 {
-    public class ConsentTests
+    public class ConsentTests: IAsyncLifetime
     {
         private const string Category = "Authorize and consent tests";
 
         private IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
 
-        public ConsentTests()
+        public async ValueTask DisposeAsync()
+        {
+            await _mockPipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
         {
             _mockPipeline.Clients.AddRange(new Client[] {
                 new Client
@@ -94,7 +99,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 }
             });
 
-            _mockPipeline.Initialize();
+            await _mockPipeline.InitializeAsync();
         }
 
         [Fact]
@@ -129,7 +134,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     services.AddTransient(typeof(IAuthorizationParametersMessageStore), storeType);
                 };
-                _mockPipeline.Initialize();
+                await _mockPipeline.InitializeAsync();
             }
 
             await _mockPipeline.LoginAsync("bob");
@@ -175,7 +180,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 {
                     services.AddTransient(typeof(IAuthorizationParametersMessageStore), storeType);
                 };
-                _mockPipeline.Initialize();
+                await _mockPipeline.InitializeAsync();
             }
 
             await _mockPipeline.LoginAsync("bob");

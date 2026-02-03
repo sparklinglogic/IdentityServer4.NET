@@ -19,13 +19,17 @@ using Xunit;
 
 namespace IdentityServer.IntegrationTests.Conformance.Basic
 {
-    public class CodeFlowTests 
+    public class CodeFlowTests: IAsyncLifetime 
     {
         private const string Category = "Conformance.Basic.CodeFlowTests";
 
         private IdentityServerPipeline _pipeline = new IdentityServerPipeline();
+        public async ValueTask DisposeAsync()
+        {
+            await _pipeline.DisposeAsync();
+        }
 
-        public CodeFlowTests()
+        public async ValueTask InitializeAsync()
         {
             _pipeline.IdentityScopes.Add(new IdentityResources.OpenId());
             _pipeline.Clients.Add(new Client
@@ -61,7 +65,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
                    }
             });
 
-            _pipeline.Initialize();
+            await _pipeline.InitializeAsync();
         }
 
         [Fact]

@@ -13,13 +13,18 @@ using Xunit;
 
 namespace IdentityServer.IntegrationTests.Extensibility
 {
-    public class CustomProfileServiceTests
+    public class CustomProfileServiceTests: IAsyncLifetime
     {
         private const string Category = "Authorize endpoint";
 
         private IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
 
-        public CustomProfileServiceTests()
+        public async ValueTask DisposeAsync()
+        {
+            await _mockPipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
         {
             _mockPipeline.OnPostConfigureServices += svcs =>
             {
@@ -45,7 +50,7 @@ namespace IdentityServer.IntegrationTests.Extensibility
                 Password = "password",
             });
 
-            _mockPipeline.Initialize();
+            await _mockPipeline.InitializeAsync();
         }
 
         [Fact]

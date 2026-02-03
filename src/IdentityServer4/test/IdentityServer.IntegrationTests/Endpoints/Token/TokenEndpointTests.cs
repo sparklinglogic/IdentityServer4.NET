@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
 using Newtonsoft.Json.Linq;
@@ -12,7 +12,7 @@ using Xunit;
 
 namespace IdentityServer.IntegrationTests.Endpoints.Token
 {
-    public class TokenEndpointTests
+    public class TokenEndpointTests: IAsyncLifetime
     {
         private const string Category = "Token endpoint";
 
@@ -24,7 +24,12 @@ namespace IdentityServer.IntegrationTests.Endpoints.Token
 
         private IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
 
-        public TokenEndpointTests()
+        public async ValueTask DisposeAsync()
+        {
+            await _mockPipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
         {
             _mockPipeline.Clients.Add(new Client
             {
@@ -68,7 +73,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Token
                 }
             });
 
-            _mockPipeline.Initialize();
+            await _mockPipeline.InitializeAsync();
         }
 
         [Fact]

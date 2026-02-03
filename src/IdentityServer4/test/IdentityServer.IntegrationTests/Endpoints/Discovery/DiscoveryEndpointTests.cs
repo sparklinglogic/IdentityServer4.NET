@@ -26,8 +26,8 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
         [Trait("Category", Category)]
         public async Task Issuer_uri_should_be_lowercase()
         {
-            IdentityServerPipeline pipeline = new IdentityServerPipeline();
-            pipeline.Initialize("/ROOT");
+            await using var pipeline = new IdentityServerPipeline();
+            await pipeline.InitializeAsync("/ROOT");
 
             var result = await pipeline.BackChannelClient.GetAsync("HTTPS://SERVER/ROOT/.WELL-KNOWN/OPENID-CONFIGURATION");
 
@@ -42,8 +42,8 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
         [Trait("Category", Category)]
         public async Task when_lower_case_issuer_option_disabled_issuer_uri_should_be_preserved()
         {
-            IdentityServerPipeline pipeline = new IdentityServerPipeline();
-            pipeline.Initialize("/ROOT");
+            await using var pipeline = new IdentityServerPipeline();
+            await pipeline.InitializeAsync("/ROOT");
 
             pipeline.Options.LowerCaseIssuerUri = false;
 
@@ -68,14 +68,14 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
             var key = CryptoHelper.CreateECDsaSecurityKey(JsonWebKeyECTypes.P256);
             var expectedAlgorithm = SecurityAlgorithms.EcdsaSha256;
 
-            IdentityServerPipeline pipeline = new IdentityServerPipeline();
+            await using var pipeline = new IdentityServerPipeline();
             pipeline.OnPostConfigureServices += services =>
             {
                 // add key to standard RSA key
                 services.AddIdentityServerBuilder()
                     .AddSigningCredential(key, expectedAlgorithm);
             };
-            pipeline.Initialize("/ROOT");
+            await pipeline.InitializeAsync("/ROOT");
 
             var result = await pipeline.BackChannelClient.GetAsync("https://server/root/.well-known/openid-configuration");
 
@@ -96,7 +96,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
             var ecdsaKey = CryptoHelper.CreateECDsaSecurityKey(JsonWebKeyECTypes.P256);
             var parameters = ecdsaKey.ECDsa.ExportParameters(true);
 
-            IdentityServerPipeline pipeline = new IdentityServerPipeline();
+            await using var pipeline = new IdentityServerPipeline();
 
             var jsonWebKeyFromECDsa = new JsonWebKey()
             {
@@ -117,7 +117,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
                     .AddSigningCredential(jsonWebKeyFromECDsa, SecurityAlgorithms.EcdsaSha256);
             };
 
-            pipeline.Initialize("/ROOT");
+            await pipeline.InitializeAsync("/ROOT");
 
             var result = await pipeline.BackChannelClient.GetAsync("https://server/root/.well-known/openid-configuration/jwks");
 
@@ -141,8 +141,8 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
         [Trait("Category", Category)]
         public async Task Jwks_entries_should_contain_alg()
         {
-            IdentityServerPipeline pipeline = new IdentityServerPipeline();
-            pipeline.Initialize("/ROOT");
+            await using var pipeline = new IdentityServerPipeline();
+            await pipeline.InitializeAsync("/ROOT");
 
             var result = await pipeline.BackChannelClient.GetAsync("https://server/root/.well-known/openid-configuration/jwks");
 
@@ -170,13 +170,13 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
         {
             var key = CryptoHelper.CreateECDsaSecurityKey(crv);
 
-            IdentityServerPipeline pipeline = new IdentityServerPipeline();
+            await using var pipeline = new IdentityServerPipeline();
             pipeline.OnPostConfigureServices += services =>
             {
                 services.AddIdentityServerBuilder()
                     .AddSigningCredential(key, alg);
             };
-            pipeline.Initialize("/ROOT");
+            await pipeline.InitializeAsync("/ROOT");
 
             var result = await pipeline.BackChannelClient.GetAsync("https://server/root/.well-known/openid-configuration/jwks");
 
@@ -195,14 +195,14 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
             var ecdsaKey = CryptoHelper.CreateECDsaSecurityKey();
             var rsaKey = CryptoHelper.CreateRsaSecurityKey();
 
-            IdentityServerPipeline pipeline = new IdentityServerPipeline();
+            await using var pipeline = new IdentityServerPipeline();
             pipeline.OnPostConfigureServices += services =>
             {
                 services.AddIdentityServerBuilder()
                     .AddSigningCredential(ecdsaKey, "ES256")
                     .AddValidationKey(new SecurityKeyInfo { Key = rsaKey, SigningAlgorithm = "RS256" });
             };
-            pipeline.Initialize("/ROOT");
+            await pipeline.InitializeAsync("/ROOT");
 
             var result = await pipeline.BackChannelClient.GetAsync("https://server/root/.well-known/openid-configuration/jwks");
 
@@ -217,8 +217,8 @@ namespace IdentityServer.IntegrationTests.Endpoints.Discovery
         [Trait("Category", Category)]
         public async Task Unicode_values_in_url_should_be_processed_correctly()
         {
-            var pipeline = new IdentityServerPipeline();
-            pipeline.Initialize();
+            await using var pipeline = new IdentityServerPipeline();
+            await pipeline.InitializeAsync();
 
             var result = await pipeline.BackChannelClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
             {

@@ -9,21 +9,39 @@ using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Clients.Setup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 using Xunit;
 
 namespace IdentityServer.IntegrationTests.Clients
 {
-    public class ClientCredentialsandResourceOwnerClient
+    public class ClientCredentialsandResourceOwnerClient: IAsyncLifetime
     {
         private const string TokenEndpoint = "https://server/connect/token";
 
-        private readonly HttpClient _client;
+        private HttpClient _client;
+        private IHost _host;
 
-        public ClientCredentialsandResourceOwnerClient()
+        public async ValueTask DisposeAsync()
         {
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
-            var server = new TestServer(builder);
+            await _host.StopAsync();
+            _host.Dispose();
+        }
+
+        public async ValueTask InitializeAsync()
+        {
+            _host = new HostBuilder()
+                .ConfigureWebHost(webHostBuilder =>
+                {
+                    webHostBuilder
+                        .UseTestServer() // If using TestServer
+                        //.UseContentRoot(Directory.GetCurrentDirectory())
+                        .UseStartup<Startup>();
+                    //.UseKestrel();
+                })
+                .Build();
+            await _host.StartAsync();
+
+            var server = _host.GetTestServer();
 
             _client = server.CreateClient();
         }

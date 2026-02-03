@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -10,15 +10,20 @@ using Xunit;
 
 namespace IdentityServer.IntegrationTests.Endpoints.CheckSession
 {
-    public class CheckSessionTests
+    public class CheckSessionTests: IAsyncLifetime
     {
         private const string Category = "Check session endpoint";
 
         private IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
 
-        public CheckSessionTests()
+        public async ValueTask DisposeAsync()
         {
-            _mockPipeline.Initialize();
+            await _mockPipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
+        {
+            await _mockPipeline.InitializeAsync();
         }
 
         [Fact]
