@@ -17,7 +17,8 @@ namespace IdentityServer4.EntityFramework.IntegrationTests
     public class IntegrationTest<TClass, TDbContext, TStoreOption> : IClassFixture<DatabaseProviderFixture<TDbContext>>
         where TDbContext : DbContext
     {
-        public static readonly TheoryData<DbContextOptions<TDbContext>> TestDatabaseProviders;
+        public static readonly TheoryData<DbContextOptions<TDbContext>> Providers;
+        public static TheoryData<DbContextOptions<TDbContext>> TestDatabaseProviders => Providers;
         protected readonly TStoreOption StoreOptions = Activator.CreateInstance<TStoreOption>();
 
         static IntegrationTest()
@@ -30,7 +31,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests
             {
                 Console.WriteLine($"Running Local Tests for {typeof(TClass).Name}");
 
-                TestDatabaseProviders = new TheoryData<DbContextOptions<TDbContext>>
+                Providers = new TheoryData<DbContextOptions<TDbContext>>
                 {
                     DatabaseProviderBuilder.BuildInMemory<TDbContext>(typeof(TClass).Name),
                     //DatabaseProviderBuilder.BuildSqlite<TDbContext>(typeof(TClass).Name),
@@ -39,7 +40,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests
             }
             else
             {
-                TestDatabaseProviders = new TheoryData<DbContextOptions<TDbContext>>
+                Providers = new TheoryData<DbContextOptions<TDbContext>>
                 {
                     DatabaseProviderBuilder.BuildInMemory<TDbContext>(typeof(TClass).Name),
                     DatabaseProviderBuilder.BuildSqlite<TDbContext>(typeof(TClass).Name)
