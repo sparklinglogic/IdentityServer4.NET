@@ -7,7 +7,7 @@ using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
-using static IdentityModel.OidcConstants;
+using static Duende.IdentityModel.OidcConstants;
 using IdentityServer4.Services;
 using IdentityServer4.Events;
 

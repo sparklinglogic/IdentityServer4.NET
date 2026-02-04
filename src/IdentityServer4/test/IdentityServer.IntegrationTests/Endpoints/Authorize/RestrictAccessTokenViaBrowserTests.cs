@@ -15,7 +15,7 @@ using Xunit;
 
 namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 {
-    public class RestrictAccessTokenViaBrowserTests
+    public class RestrictAccessTokenViaBrowserTests: IAsyncLifetime
     {
         private const string Category = "RestrictAccessTokenViaBrowserTests";
 
@@ -23,7 +23,12 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 
         private ClaimsPrincipal _user = new IdentityServerUser("bob").CreatePrincipal();
 
-        public RestrictAccessTokenViaBrowserTests()
+        public async ValueTask DisposeAsync()
+        {
+            await _mockPipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
         {
             _mockPipeline.Clients.AddRange(new Client[] {
                 new Client
@@ -84,7 +89,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
                 new IdentityResources.OpenId()
             });
 
-            _mockPipeline.Initialize();
+            await _mockPipeline.InitializeAsync();
         }
 
         [Fact]
@@ -101,7 +106,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().StartWith("https://client1/callback");
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             authorization.IdentityToken.Should().NotBeNull();
             authorization.AccessToken.Should().BeNull();
         }
@@ -120,7 +125,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().StartWith("https://client1/callback");
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             authorization.IdentityToken.Should().NotBeNull();
             authorization.AccessToken.Should().NotBeNull();
         }
@@ -139,7 +144,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().StartWith("https://client2/callback");
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             authorization.IdentityToken.Should().NotBeNull();
             authorization.AccessToken.Should().BeNull();
         }
@@ -172,7 +177,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().StartWith("https://client3/callback");
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             authorization.IdentityToken.Should().NotBeNull();
             authorization.AccessToken.Should().BeNull();
             authorization.Code.Should().NotBeNull();
@@ -192,7 +197,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().StartWith("https://client3/callback");
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             authorization.IdentityToken.Should().NotBeNull();
             authorization.AccessToken.Should().NotBeNull();
             authorization.Code.Should().NotBeNull();
@@ -213,7 +218,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
 
             response.StatusCode.Should().Be(HttpStatusCode.Found);
             response.Headers.Location.AbsoluteUri.Should().StartWith("https://client4/callback");
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             authorization.IdentityToken.Should().NotBeNull();
             authorization.AccessToken.Should().BeNull();
             authorization.Code.Should().NotBeNull();

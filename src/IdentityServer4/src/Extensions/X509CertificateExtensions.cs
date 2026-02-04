@@ -1,8 +1,8 @@
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
-using IdentityModel;
 
 namespace IdentityServer4.Extensions
 {
@@ -22,7 +22,7 @@ namespace IdentityServer4.Extensions
                             
             var values = new Dictionary<string, string>
             {
-                { "x5t#S256", Base64Url.Encode(hash) }
+                { "x5t#S256", Base64Url.EncodeToString(hash) }
             };
 
             return JsonSerializer.Serialize(values);

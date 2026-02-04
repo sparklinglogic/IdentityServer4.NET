@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using FluentAssertions;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
@@ -16,13 +16,18 @@ using Xunit;
 
 namespace IdentityServer.IntegrationTests.Conformance.Basic
 {
-    public class ClientAuthenticationTests 
+    public class ClientAuthenticationTests: IAsyncLifetime 
     {
         private const string Category = "Conformance.Basic.ClientAuthenticationTests";
 
         private IdentityServerPipeline _pipeline = new IdentityServerPipeline();
 
-        public ClientAuthenticationTests()
+        public async ValueTask DisposeAsync()
+        {
+            await _pipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
         {
             _pipeline.IdentityScopes.Add(new IdentityResources.OpenId());
             _pipeline.Clients.Add(new Client
@@ -51,14 +56,14 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
                 SubjectId = "bob",
                 Username = "bob",
                 Claims = new Claim[]
-                   {
-                        new Claim("name", "Bob Loblaw"),
-                        new Claim("email", "bob@loblaw.com"),
-                        new Claim("role", "Attorney")
-                   }
+                {
+                    new Claim("name", "Bob Loblaw"),
+                    new Claim("email", "bob@loblaw.com"),
+                    new Claim("role", "Attorney")
+                }
             });
 
-            _pipeline.Initialize();
+            await _pipeline.InitializeAsync();
         }
 
         [Fact]

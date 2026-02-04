@@ -1,30 +1,30 @@
 <Project>
 
   <PropertyGroup>
-    <FrameworkVersion>8.0.10</FrameworkVersion>
-    <ExtensionsVersion>8.0.10</ExtensionsVersion>
-    <EntityFrameworkVersion>8.0.10</EntityFrameworkVersion>
+    <FrameworkVersion>10.0.2</FrameworkVersion>
+    <ExtensionsVersion>10.0.2</ExtensionsVersion>
+    <EntityFrameworkVersion>10.0.2</EntityFrameworkVersion>
     
-    <IdentityServerVersion>4.8.0-*</IdentityServerVersion>
+    <IdentityServerVersion>4.10.0-*</IdentityServerVersion>
 
     <MinVerTagPrefix>v</MinVerTagPrefix>
   </PropertyGroup>
 
   <ItemGroup>
     <!--build related-->
-    <PackageReference Include="MinVer" Version="6.0.0" PrivateAssets="All" />
-    <PackageReference Update="SimpleExec" Version="12.0.0" />
-    <PackageReference Update="Bullseye" Version="5.0.0" />
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    <PackageReference Include="MinVer" Version="7.0.0" PrivateAssets="All" />
+    <PackageReference Update="SimpleExec" Version="13.0.0" />
+    <PackageReference Update="Bullseye" Version="6.1.0" />
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.102" PrivateAssets="All" />
 
     <!--tests -->
-    <PackageReference Update="FluentAssertions" Version="6.12.1" />
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-    <PackageReference Update="xunit" Version="2.9.2" />
-    <PackageReference Update="xunit.runner.visualstudio" Version="2.8.2" PrivateAssets="All" />
+    <PackageReference Update="FluentAssertions" Version="8.8.0" />
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageReference Update="xunit.v3" Version="3.2.2" />
+    <PackageReference Update="xunit.runner.visualstudio" Version="3.1.5" PrivateAssets="All" />
 
     <!--our stuff -->
-    <PackageReference Update="IdentityModel" Version="7.0.0" />
+    <PackageReference Update="Duende.IdentityModel" Version="8.0.0" />
 
     <!--microsoft extensions -->
     <PackageReference Update="Microsoft.Extensions.Caching.Memory" Version="$(ExtensionsVersion)" />
@@ -35,10 +35,10 @@
     <PackageReference Update="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(ExtensionsVersion)" />
     
     <!--misc -->
-    <PackageReference Update="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.2.0" />
-    <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="8.2.0" />
-    <PackageReference Update="System.Security.Principal.Windows" Version="5.0.0" />
-    <PackageReference Update="AutoMapper" Version="13.0.1" />
+    <PackageReference Update="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.15.0" />
+    <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
+    <!-- PackageReference Update="System.Security.Principal.Windows" Version="5.0.0" / -->
+    <PackageReference Update="AutoMapper" Version="16.0.0" />
     
     <!--microsoft asp.net core -->
     <PackageReference Update="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(FrameworkVersion)" />

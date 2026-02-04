@@ -1,6 +1,7 @@
-﻿using IdentityModel;
+using Duende.IdentityModel;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Buffers.Text;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -71,7 +72,7 @@ namespace IdentityServer4.Configuration
                 var leftPart = new byte[size];
                 Array.Copy(hash, leftPart, size);
 
-                return Base64Url.Encode(leftPart);
+                return Base64Url.EncodeToString(leftPart);
             }
         }
 

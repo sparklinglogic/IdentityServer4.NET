@@ -16,15 +16,19 @@ using Xunit.Sdk;
 
 namespace IdentityServer.IntegrationTests.Conformance.Basic
 {
-    public class ResponseTypeResponseModeTests
+    public class ResponseTypeResponseModeTests: IAsyncLifetime
     {
         private const string Category = "Conformance.Basic.ResponseTypeResponseModeTests";
 
         private IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
-
-        public ResponseTypeResponseModeTests()
+        public async ValueTask DisposeAsync()
         {
-            _mockPipeline.Initialize();
+            await _mockPipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
+        {
+            await _mockPipeline.InitializeAsync();
             _mockPipeline.BrowserClient.AllowAutoRedirect = false;
             _mockPipeline.Clients.Add(new Client
             {
@@ -83,7 +87,7 @@ namespace IdentityServer.IntegrationTests.Conformance.Basic
             var response = await _mockPipeline.BrowserClient.GetAsync(url);
             response.StatusCode.Should().Be(HttpStatusCode.Found);
 
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             authorization.IsError.Should().BeFalse();
             authorization.Code.Should().NotBeNull();
             authorization.State.Should().Be(state);

@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,28 +10,46 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
-using IdentityModel;
-using IdentityModel.Client;
+using Duende.IdentityModel;
+using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Clients.Setup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace IdentityServer.IntegrationTests.Clients
 {
-    public class ClientCredentialsClient
+    public class ClientCredentialsClient: IAsyncLifetime
     {
         private const string TokenEndpoint = "https://server/connect/token";
 
-        private readonly HttpClient _client;
+        private HttpClient _client;
+        private IHost _host;
 
-        public ClientCredentialsClient()
+        public async ValueTask DisposeAsync()
         {
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
-            var server = new TestServer(builder);
+            await _host.StopAsync();
+            _host.Dispose();
+        }
+
+        public async ValueTask InitializeAsync()
+        {
+            _host = new HostBuilder()
+                .ConfigureWebHost(webHostBuilder =>
+                {
+                    webHostBuilder
+                        .UseTestServer() // If using TestServer
+                        //.UseContentRoot(Directory.GetCurrentDirectory())
+                        .UseStartup<Startup>();
+                    //.UseKestrel();
+                })
+                .Build();
+            await _host.StartAsync();
+
+            var server = _host.GetTestServer();
 
             _client = server.CreateClient();
         }
@@ -451,7 +470,7 @@ namespace IdentityServer.IntegrationTests.Clients
         {
             var token = response.AccessToken.Split('.').Skip(1).Take(1).First();
             var dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(
-                Encoding.UTF8.GetString(Base64Url.Decode(token)));
+                Encoding.UTF8.GetString(Base64Url.DecodeFromChars(token)));
 
             return dictionary;
         }

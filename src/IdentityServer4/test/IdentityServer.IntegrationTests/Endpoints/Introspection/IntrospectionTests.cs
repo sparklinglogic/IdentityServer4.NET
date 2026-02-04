@@ -10,30 +10,50 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Endpoints.Introspection.Setup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace IdentityServer.IntegrationTests.Endpoints.Introspection
 {
-    public class IntrospectionTests
+    public class IntrospectionTests: IAsyncLifetime
     {
         private const string Category = "Introspection endpoint";
         private const string IntrospectionEndpoint = "https://server/connect/introspect";
         private const string TokenEndpoint = "https://server/connect/token";
 
-        private readonly HttpClient _client;
-        private readonly HttpMessageHandler _handler;
+        private HttpClient _client;
+        private HttpMessageHandler _handler;
 
-        public IntrospectionTests()
+        private IHost _host;
+
+        public async ValueTask DisposeAsync()
         {
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>();
-            var server = new TestServer(builder);
+            _handler.Dispose();
+            await _host.StopAsync();
+            _host.Dispose();
+        }
+
+        public async ValueTask InitializeAsync()
+        {
+            _host = new HostBuilder()
+                .ConfigureWebHost(webHostBuilder =>
+                {
+                    webHostBuilder
+                        .UseTestServer() // If using TestServer
+                        //.UseContentRoot(Directory.GetCurrentDirectory())
+                        .UseStartup<Startup>();
+                    //.UseKestrel();
+                })
+                .Build();
+            await _host.StartAsync();
+
+            var server = _host.GetTestServer();
 
             _handler = server.CreateHandler();
             _client = server.CreateClient();

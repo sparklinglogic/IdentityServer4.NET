@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using FluentAssertions;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
@@ -16,7 +16,7 @@ using Xunit;
 
 namespace IdentityServer.IntegrationTests.Endpoints.Revocation
 {
-    public class RevocationTests
+    public class RevocationTests: IAsyncLifetime
     {
         private const string Category = "RevocationTests endpoint";
 
@@ -29,7 +29,12 @@ namespace IdentityServer.IntegrationTests.Endpoints.Revocation
 
         private IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
 
-        public RevocationTests()
+        public async ValueTask DisposeAsync()
+        {
+            await _mockPipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
         {
             _mockPipeline.Clients.Add(new Client
             {
@@ -100,7 +105,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Revocation
                 }
             });
 
-            _mockPipeline.Initialize();
+            await _mockPipeline.InitializeAsync();
         }
 
         private class Tokens
@@ -175,7 +180,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Revocation
                 ClientSecret = scope_secret,
 
                 Token = token,
-                TokenTypeHint = IdentityModel.OidcConstants.TokenTypes.AccessToken
+                TokenTypeHint = Duende.IdentityModel.OidcConstants.TokenTypes.AccessToken
             });
 
             return response.IsError == false && response.IsActive;

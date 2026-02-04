@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -13,7 +13,7 @@ namespace IdentityServer.UnitTests.Common
         public static X509Certificate2 Load()
         {
             var cert = Path.Combine(System.AppContext.BaseDirectory, "identityserver_testing.pfx");
-            return new X509Certificate2(cert, "password");
+            return X509CertificateLoader.LoadPkcs12FromFile(cert, "password");
         }
 
         public static SigningCredentials LoadSigningCredentials()

@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
-using IdentityModel;
+using Duende.IdentityModel;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
 using Newtonsoft.Json;
@@ -14,13 +14,18 @@ using Xunit;
 
 namespace IdentityServer.IntegrationTests.Endpoints.DeviceAuthorization
 {
-    public class DeviceAuthorizationTests
+    public class DeviceAuthorizationTests: IAsyncLifetime
     {
         private const string Category = "Device authorization endpoint";
 
         private IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
 
-        public DeviceAuthorizationTests()
+        public async ValueTask DisposeAsync()
+        {
+            await _mockPipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
         {
             _mockPipeline.Clients.Add(new Client
             {
@@ -34,7 +39,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.DeviceAuthorization
                 new IdentityResources.OpenId()
             });
 
-            _mockPipeline.Initialize();
+            await _mockPipeline.InitializeAsync();
         }
 
         [Fact]

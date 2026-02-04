@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -17,13 +17,18 @@ using Xunit;
 
 namespace IdentityServer.IntegrationTests.Pipeline
 {
-    public class CorsTests
+    public class CorsTests: IAsyncLifetime
     {
         private const string Category = "CORS Integration";
 
         private IdentityServerPipeline _pipeline = new IdentityServerPipeline();
 
-        public CorsTests()
+        public async ValueTask DisposeAsync()
+        {
+            await _pipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
         {
             _pipeline.Clients.AddRange(new Client[] {
                 new Client
@@ -72,7 +77,7 @@ namespace IdentityServer.IntegrationTests.Pipeline
                 }
             });
 
-            _pipeline.Initialize();
+            await _pipeline.InitializeAsync();
         }
 
         [Theory]
@@ -122,7 +127,7 @@ namespace IdentityServer.IntegrationTests.Pipeline
             {
                 services.AddSingleton<ICorsPolicyService>(policy);
             };
-            _pipeline.Initialize();
+            await _pipeline.InitializeAsync();
 
             _pipeline.BackChannelClient.DefaultRequestHeaders.Add("Origin", "https://client");
             _pipeline.BackChannelClient.DefaultRequestHeaders.Add("Access-Control-Request-Method", "GET");

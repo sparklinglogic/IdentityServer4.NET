@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using IdentityModel;
+using Duende.IdentityModel;
 using IdentityServer4.Configuration;
 using IdentityServer4.Extensions;
 using IdentityServer4.Services;
@@ -11,6 +11,7 @@ using IdentityServer4.Validation;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -373,13 +374,13 @@ namespace IdentityServer4.ResponseHandling
                 if (key.Key is X509SecurityKey x509Key)
                 {
                     var cert64 = Convert.ToBase64String(x509Key.Certificate.RawData);
-                    var thumbprint = Base64Url.Encode(x509Key.Certificate.GetCertHash());
+                    var thumbprint = Base64Url.EncodeToString(x509Key.Certificate.GetCertHash());
 
                     if (x509Key.PublicKey is RSA rsa)
                     {
                         var parameters = rsa.ExportParameters(false);
-                        var exponent = Base64Url.Encode(parameters.Exponent);
-                        var modulus = Base64Url.Encode(parameters.Modulus);
+                        var exponent = Base64Url.EncodeToString(parameters.Exponent);
+                        var modulus = Base64Url.EncodeToString(parameters.Modulus);
 
                         var rsaJsonWebKey = new Models.JsonWebKey
                         {
@@ -397,8 +398,8 @@ namespace IdentityServer4.ResponseHandling
                     else if (x509Key.PublicKey is ECDsa ecdsa)
                     {
                         var parameters = ecdsa.ExportParameters(false);
-                        var x = Base64Url.Encode(parameters.Q.X);
-                        var y = Base64Url.Encode(parameters.Q.Y);
+                        var x = Base64Url.EncodeToString(parameters.Q.X);
+                        var y = Base64Url.EncodeToString(parameters.Q.Y);
 
                         var ecdsaJsonWebKey = new Models.JsonWebKey
                         {
@@ -422,8 +423,8 @@ namespace IdentityServer4.ResponseHandling
                 else if (key.Key is RsaSecurityKey rsaKey)
                 {
                     var parameters = rsaKey.Rsa?.ExportParameters(false) ?? rsaKey.Parameters;
-                    var exponent = Base64Url.Encode(parameters.Exponent);
-                    var modulus = Base64Url.Encode(parameters.Modulus);
+                    var exponent = Base64Url.EncodeToString(parameters.Exponent);
+                    var modulus = Base64Url.EncodeToString(parameters.Modulus);
 
                     var webKey = new Models.JsonWebKey
                     {
@@ -440,8 +441,8 @@ namespace IdentityServer4.ResponseHandling
                 else if (key.Key is ECDsaSecurityKey ecdsaKey)
                 {
                     var parameters = ecdsaKey.ECDsa.ExportParameters(false);
-                    var x = Base64Url.Encode(parameters.Q.X);
-                    var y = Base64Url.Encode(parameters.Q.Y);
+                    var x = Base64Url.EncodeToString(parameters.Q.X);
+                    var y = Base64Url.EncodeToString(parameters.Q.Y);
 
                     var ecdsaJsonWebKey = new Models.JsonWebKey
                     {

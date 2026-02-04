@@ -17,9 +17,10 @@ namespace IdentityServer4.EntityFramework.IntegrationTests
     public class IntegrationTest<TClass, TDbContext, TStoreOption> : IClassFixture<DatabaseProviderFixture<TDbContext>>
         where TDbContext : DbContext
     {
-        public static readonly TheoryData<DbContextOptions<TDbContext>> TestDatabaseProviders;
         protected readonly TStoreOption StoreOptions = Activator.CreateInstance<TStoreOption>();
 
+        public static TheoryData<DbContextOptions<TDbContext>> TestDatabaseProviders => Providers;
+        private static readonly TheoryData<DbContextOptions<TDbContext>> Providers;
         static IntegrationTest()
         {
             var config = new ConfigurationBuilder()
@@ -30,7 +31,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests
             {
                 Console.WriteLine($"Running Local Tests for {typeof(TClass).Name}");
 
-                TestDatabaseProviders = new TheoryData<DbContextOptions<TDbContext>>
+                Providers = new TheoryData<DbContextOptions<TDbContext>>
                 {
                     DatabaseProviderBuilder.BuildInMemory<TDbContext>(typeof(TClass).Name),
                     DatabaseProviderBuilder.BuildSqlite<TDbContext>(typeof(TClass).Name),
@@ -39,7 +40,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests
             }
             else
             {
-                TestDatabaseProviders = new TheoryData<DbContextOptions<TDbContext>>
+                Providers = new TheoryData<DbContextOptions<TDbContext>>
                 {
                     DatabaseProviderBuilder.BuildInMemory<TDbContext>(typeof(TClass).Name),
                     DatabaseProviderBuilder.BuildSqlite<TDbContext>(typeof(TClass).Name)
@@ -50,7 +51,7 @@ namespace IdentityServer4.EntityFramework.IntegrationTests
 
         protected IntegrationTest(DatabaseProviderFixture<TDbContext> fixture)
         {
-            fixture.Options = ((TheoryData) TestDatabaseProviders).SelectMany(x => x.Select(y => (DbContextOptions<TDbContext>)y)).ToList();
+            fixture.Options = TestDatabaseProviders.Select(x => x.Data).ToList();
             fixture.StoreOptions = StoreOptions;
         }
     }

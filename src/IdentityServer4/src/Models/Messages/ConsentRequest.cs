@@ -1,8 +1,9 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using IdentityModel;
+using System.Buffers.Text;
+using Duende.IdentityModel;
 using IdentityServer4.Extensions;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -93,7 +94,7 @@ namespace IdentityServer4.Models
                     var bytes = Encoding.UTF8.GetBytes(value);
                     var hash = sha.ComputeHash(bytes);
 
-                    return Base64Url.Encode(hash);
+                    return Base64Url.EncodeToString(hash);
                 }
             }
         }

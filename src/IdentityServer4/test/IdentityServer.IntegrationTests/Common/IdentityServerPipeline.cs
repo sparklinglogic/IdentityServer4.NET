@@ -11,7 +11,7 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 using IdentityServer4;
 using IdentityServer4.Configuration;
 using IdentityServer4.Extensions;
@@ -24,12 +24,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace IdentityServer.IntegrationTests.Common
 {
-    public class IdentityServerPipeline
+    public class IdentityServerPipeline: IAsyncDisposable
     {
         public const string BaseUrl = "https://server";
         public const string LoginPage = BaseUrl + "/account/login";
@@ -74,36 +75,57 @@ namespace IdentityServer.IntegrationTests.Common
         public event Action<IApplicationBuilder> OnPostConfigure = app => { };
 
         public Func<HttpContext, Task<bool>> OnFederatedSignout;
+        private IHost _host;
 
-        public void Initialize(string basePath = null, bool enableLogging = false)
+        public async ValueTask InitializeAsync(string basePath = null, bool enableLogging = false)
         {
-            var builder = new WebHostBuilder();
-            builder.ConfigureServices(ConfigureServices);
-            builder.Configure(app=>
+            if (_host != null)
             {
-                if (basePath != null)
-                {
-                    app.Map(basePath, map =>
-                    {
-                        ConfigureApp(map);
-                    });
-                }
-                else
-                {
-                    ConfigureApp(app);
-                }
-            });
-
-            if (enableLogging)
-            {
-                builder.ConfigureLogging((ctx, b) => b.AddConsole());
+                await DisposeAsync();
             }
+            _host = new HostBuilder()
+                .ConfigureWebHost(webHostBuilder =>
+                {
+                    webHostBuilder
+                        .UseTestServer() // If using TestServer
+                        .ConfigureServices(ConfigureServices)
+                        .Configure(app =>
+                        {
+                            if (basePath != null)
+                            {
+                                app.Map(basePath, map =>
+                                {
+                                    ConfigureApp(map);
+                                });
+                            }
+                            else
+                            {
+                                ConfigureApp(app);
+                            }
+                        });
+                    if (enableLogging)
+                    {
+                        webHostBuilder.ConfigureLogging((ctx, b) => b.AddConsole());
+                    }
+                    //.UseContentRoot(Directory.GetCurrentDirectory())
+                    //.UseStartup<Startup>();
+                    //.UseKestrel();
+                })
+                .Build();
+            await _host.StartAsync();
 
-            Server = new TestServer(builder);
+            Server = _host.GetTestServer();
             Handler = Server.CreateHandler();
-            
+
             BrowserClient = new BrowserClient(new BrowserHandler(Handler));
             BackChannelClient = new HttpClient(Handler);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            Handler?.Dispose();
+            await _host.StopAsync();
+            _host.Dispose();
         }
 
         public void ConfigureServices(IServiceCollection services)

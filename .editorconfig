@@ -1923,6 +1923,9 @@ resharper_x_unit2019_highlighting=none
 resharper_x_unit3000_highlighting=error
 resharper_x_unit3001_highlighting=error
 
+# XUnit
+dotnet_diagnostic.xUnit1051.severity = none
+
 [{*.har,*.jsb2,*.jsb3,*.json,.babelrc,.eslintrc,.stylelintrc,bowerrc,jest.config}]
 indent_style=space
 indent_size=2

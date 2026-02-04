@@ -1,9 +1,9 @@
-﻿using System.Net;
+using System.Buffers.Text;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
-using IdentityModel;
 using IdentityServer.IntegrationTests.Common;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
@@ -13,13 +13,18 @@ using Xunit;
 
 namespace IdentityServer.IntegrationTests.Extensibility
 {
-    public class CustomProfileServiceTests
+    public class CustomProfileServiceTests: IAsyncLifetime
     {
         private const string Category = "Authorize endpoint";
 
         private IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
 
-        public CustomProfileServiceTests()
+        public async ValueTask DisposeAsync()
+        {
+            await _mockPipeline.DisposeAsync();
+        }
+
+        public async ValueTask InitializeAsync()
         {
             _mockPipeline.OnPostConfigureServices += svcs =>
             {
@@ -45,7 +50,7 @@ namespace IdentityServer.IntegrationTests.Extensibility
                 Password = "password",
             });
 
-            _mockPipeline.Initialize();
+            await _mockPipeline.InitializeAsync();
         }
 
         [Fact]
@@ -67,12 +72,12 @@ namespace IdentityServer.IntegrationTests.Extensibility
             response.StatusCode.Should().Be(HttpStatusCode.Redirect);
             response.Headers.Location.ToString().Should().StartWith("https://client/callback");
 
-            var authorization = new IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
+            var authorization = new Duende.IdentityModel.Client.AuthorizeResponse(response.Headers.Location.ToString());
             authorization.IsError.Should().BeFalse();
             authorization.IdentityToken.Should().NotBeNull();
 
             var payload = authorization.IdentityToken.Split('.')[1];
-            var json = Encoding.UTF8.GetString(Base64Url.Decode(payload));
+            var json = Encoding.UTF8.GetString(Base64Url.DecodeFromChars(payload));
             var obj = JObject.Parse(json);
 
             obj.GetValue("foo").Should().NotBeNull();

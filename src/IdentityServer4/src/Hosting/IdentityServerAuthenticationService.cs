@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using IdentityServer4.Configuration.DependencyInjection;
 using IdentityServer4.Extensions;
 using System;
-using IdentityModel;
+using Duende.IdentityModel;
 using System.Linq;
 using IdentityServer4.Configuration;
 

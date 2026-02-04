@@ -19,11 +19,12 @@ using Xunit;
 
 namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
 {
+    [Collection("Sequential")]
     public class PersistedGrantStoreTests : IntegrationTest<PersistedGrantStoreTests, PersistedGrantDbContext, OperationalStoreOptions>
     {
         public PersistedGrantStoreTests(DatabaseProviderFixture<PersistedGrantDbContext> fixture) : base(fixture)
         {
-            foreach (var options in ((TheoryData)TestDatabaseProviders).SelectMany(x => x.Select(y => (DbContextOptions<PersistedGrantDbContext>)y)).ToList())
+            foreach (var options in TestDatabaseProviders.Select(x => x.Data).ToList())
             {
                 using (var context = new PersistedGrantDbContext(options, StoreOptions))
                     context.Database.EnsureCreated();
@@ -111,15 +112,15 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
         {
             using (var context = new PersistedGrantDbContext(options, StoreOptions))
             {
-                context.PersistedGrants.Add(CreateTestObject(sub: "sub1", clientId: "c1", sid: "s1", type: "t1").ToEntity());
-                context.PersistedGrants.Add(CreateTestObject(sub: "sub1", clientId: "c1", sid: "s1", type: "t2").ToEntity());
-                context.PersistedGrants.Add(CreateTestObject(sub: "sub1", clientId: "c1", sid: "s2", type: "t1").ToEntity());
-                context.PersistedGrants.Add(CreateTestObject(sub: "sub1", clientId: "c1", sid: "s2", type: "t2").ToEntity());
-                context.PersistedGrants.Add(CreateTestObject(sub: "sub1", clientId: "c2", sid: "s1", type: "t1").ToEntity());
-                context.PersistedGrants.Add(CreateTestObject(sub: "sub1", clientId: "c2", sid: "s1", type: "t2").ToEntity());
-                context.PersistedGrants.Add(CreateTestObject(sub: "sub1", clientId: "c2", sid: "s2", type: "t1").ToEntity());
-                context.PersistedGrants.Add(CreateTestObject(sub: "sub1", clientId: "c2", sid: "s2", type: "t2").ToEntity());
-                context.PersistedGrants.Add(CreateTestObject(sub: "sub1", clientId: "c3", sid: "s3", type: "t3").ToEntity());
+                context.PersistedGrants.Add(CreateTestObject(sub: "sub4", clientId: "c1", sid: "s1", type: "t1").ToEntity());
+                context.PersistedGrants.Add(CreateTestObject(sub: "sub4", clientId: "c1", sid: "s1", type: "t2").ToEntity());
+                context.PersistedGrants.Add(CreateTestObject(sub: "sub4", clientId: "c1", sid: "s2", type: "t1").ToEntity());
+                context.PersistedGrants.Add(CreateTestObject(sub: "sub4", clientId: "c1", sid: "s2", type: "t2").ToEntity());
+                context.PersistedGrants.Add(CreateTestObject(sub: "sub4", clientId: "c2", sid: "s1", type: "t1").ToEntity());
+                context.PersistedGrants.Add(CreateTestObject(sub: "sub4", clientId: "c2", sid: "s1", type: "t2").ToEntity());
+                context.PersistedGrants.Add(CreateTestObject(sub: "sub4", clientId: "c2", sid: "s2", type: "t1").ToEntity());
+                context.PersistedGrants.Add(CreateTestObject(sub: "sub4", clientId: "c2", sid: "s2", type: "t2").ToEntity());
+                context.PersistedGrants.Add(CreateTestObject(sub: "sub4", clientId: "c3", sid: "s3", type: "t3").ToEntity());
                 context.PersistedGrants.Add(CreateTestObject().ToEntity());
                 context.SaveChanges();
             }
@@ -130,54 +131,54 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
 
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
-                    SubjectId = "sub1"
+                    SubjectId = "sub4"
                 })).ToList().Count.Should().Be(9);
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
-                    SubjectId = "sub2"
+                    SubjectId = "sub5"
                 })).ToList().Count.Should().Be(0);
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
-                    SubjectId = "sub1",
+                    SubjectId = "sub4",
                     ClientId = "c1"
                 })).ToList().Count.Should().Be(4);
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
-                    SubjectId = "sub1",
+                    SubjectId = "sub4",
                     ClientId = "c2"
                 })).ToList().Count.Should().Be(4);
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
-                    SubjectId = "sub1",
+                    SubjectId = "sub4",
                     ClientId = "c3"
                 })).ToList().Count.Should().Be(1);
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
-                    SubjectId = "sub1",
+                    SubjectId = "sub4",
                     ClientId = "c4"
                 })).ToList().Count.Should().Be(0);
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
-                    SubjectId = "sub1",
+                    SubjectId = "sub4",
                     ClientId = "c1",
                     SessionId = "s1"
                 })).ToList().Count.Should().Be(2);
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
-                    SubjectId = "sub1",
+                    SubjectId = "sub4",
                     ClientId = "c3",
                     SessionId = "s1"
                 })).ToList().Count.Should().Be(0);
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
-                    SubjectId = "sub1",
+                    SubjectId = "sub4",
                     ClientId = "c1",
                     SessionId = "s1",
                     Type = "t1"
                 })).ToList().Count.Should().Be(1);
                 (await store.GetAllAsync(new PersistedGrantFilter
                 {
-                    SubjectId = "sub1",
+                    SubjectId = "sub4",
                     ClientId = "c1",
                     SessionId = "s1",
                     Type = "t3"
