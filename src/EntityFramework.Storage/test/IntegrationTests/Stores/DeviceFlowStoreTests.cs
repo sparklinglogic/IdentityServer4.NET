@@ -123,12 +123,14 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
             {
                 var store = new DeviceFlowStore(context, new PersistentGrantSerializer(), FakeLogger<DeviceFlowStore>.Create());
 
+#pragma warning disable EF1001 // Suppress internal EF Core API usage warning
                 // skip odd behaviour of in-memory provider
                 if (options.Extensions.All(x => x.GetType() != typeof(InMemoryOptionsExtension)))
                 {
                     await Assert.ThrowsAsync<DbUpdateException>(() =>
                         store.StoreDeviceAuthorizationAsync($"device_{Guid.NewGuid().ToString()}", existingUserCode, deviceCodeData));
                 }
+#pragma warning restore EF1001
             }
         }
 
@@ -165,13 +167,14 @@ namespace IdentityServer4.EntityFramework.IntegrationTests.Stores
             using (var context = new PersistedGrantDbContext(options, StoreOptions))
             {
                 var store = new DeviceFlowStore(context, new PersistentGrantSerializer(), FakeLogger<DeviceFlowStore>.Create());
-
+#pragma warning disable EF1001 // Suppress internal EF Core API usage warning
                 // skip odd behaviour of in-memory provider
                 if (options.Extensions.All(x => x.GetType() != typeof(InMemoryOptionsExtension)))
                 {
                     await Assert.ThrowsAsync<DbUpdateException>(() =>
                         store.StoreDeviceAuthorizationAsync(existingDeviceCode, $"user_{Guid.NewGuid().ToString()}", deviceCodeData));
                 }
+#pragma warning restore EF1001
             }
         }
 
