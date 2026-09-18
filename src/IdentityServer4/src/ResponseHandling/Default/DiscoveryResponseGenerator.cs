@@ -261,7 +261,7 @@ namespace IdentityServer4.ResponseHandling
                     OidcConstants.GrantTypes.AuthorizationCode,
                     OidcConstants.GrantTypes.ClientCredentials,
                     OidcConstants.GrantTypes.RefreshToken,
-                    OidcConstants.GrantTypes.Implicit
+                    //OidcConstants.GrantTypes.Implicit
                 };
 
                 if (!(ResourceOwnerValidator is NotSupportedResourceOwnerPasswordValidator))
@@ -317,7 +317,7 @@ namespace IdentityServer4.ResponseHandling
             }
 
             entries.Add(OidcConstants.Discovery.SubjectTypesSupported, new[] { "public" });
-            entries.Add(OidcConstants.Discovery.CodeChallengeMethodsSupported, new[] { OidcConstants.CodeChallengeMethods.Plain, OidcConstants.CodeChallengeMethods.Sha256 });
+            entries.Add(OidcConstants.Discovery.CodeChallengeMethodsSupported, new[] { /*OidcConstants.CodeChallengeMethods.Plain,*/ OidcConstants.CodeChallengeMethods.Sha256 });
 
             if (Options.Endpoints.EnableAuthorizeEndpoint)
             {
