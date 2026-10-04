@@ -2,6 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System.Collections.Generic;
+
 namespace IdentityServer4.Configuration
 {
     /// <summary>
@@ -17,6 +19,13 @@ namespace IdentityServer4.Configuration
         /// Unique name of this server instance, e.g. https://myissuer.com
         /// </value>
         public string IssuerUri { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="IEnumerable{String}"/> that contains valid issuers that will be used to check against the token's issuer.
+        /// The default is <c>null</c>.
+        /// </summary>
+        public IEnumerable<string> ValidIssuers { get; set; }
+
 
         /// <summary>
         /// Set to false to preserve the original casing of the IssuerUri. Defaults to true.
